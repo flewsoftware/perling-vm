@@ -4,7 +4,10 @@
 perling vm is a interpreter for the compiled perling byte code  
 **NOTE: perling VM and perling is WIP**
 
+## DEMO
+You can find examples of Perling byte code in the examples directory, they can be ran by compiling and running perlingVM with ``examples/print.perling.bin`` as a argument
 
+## OPCODES
 | OPCODE | HEX  | Description                                                                       |
 |--------|------|-----------------------------------------------------------------------------------|
 | HLT    | 0x00 | Halts the program                                                                 |
