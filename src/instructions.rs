@@ -1,4 +1,3 @@
-
 #[derive(Debug, PartialEq)]
 pub enum Opcode {
     HLT,    // halt
@@ -11,19 +10,16 @@ pub enum Opcode {
     RJMP,   // relative jump
     JMPTL,  // jump to label
     VMCALL, // run commands in VM
-
 }
 
 #[derive(Debug, PartialEq)]
 pub struct Instruction {
-    opcode: Opcode
+    opcode: Opcode,
 }
 
 impl Instruction {
     pub fn new(opcode: Opcode) -> Instruction {
-        Instruction {
-            opcode
-        }
+        Instruction { opcode }
     }
 }
 
@@ -39,12 +35,10 @@ impl From<u8> for Opcode {
             6 => Opcode::RJMP,
             7 => Opcode::JMPTL,
             8 => Opcode::VMCALL,
-            _ => Opcode::IGL
+            _ => Opcode::IGL,
         }
     }
 }
-
-
 
 #[cfg(test)]
 mod tests {
