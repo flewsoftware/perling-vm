@@ -195,7 +195,14 @@ impl VM {
                     self.registers[output_register as usize] = 0;
                 }
             }
-
+            Opcode::JNEQ => {
+                let source = self.registers[self.next_8_bits() as usize];
+                let target = self.registers[self.next_8_bits() as usize];
+                if source == 0 {
+                    self.program_counter = target as usize;
+                    return (true, 0);
+                }
+            }
             _ => {
                 println!(
                     "Unknown opcode at program set: {} program counter: {}",
