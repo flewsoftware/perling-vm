@@ -167,6 +167,16 @@ impl VM {
                 info!("executing VMCALL {} {} {}", call_name, arg1, arg2);
                 return self.execute_vm_call(call_name, arg1, arg2); // returns false if kill
             }
+            Opcode::EQ => {
+                let register1 = self.registers[self.next_8_bits() as usize];
+                let register2 = self.registers[self.next_8_bits() as usize];
+                let output_register = self.next_8_bits();
+                if register1 == register2 {
+                    self.registers[output_register as usize] = 1;
+                } else {
+                    self.registers[output_register as usize] = 0;
+                }
+            }
             _ => {
                 println!(
                     "Unknown opcode at program set: {} program counter: {}",
