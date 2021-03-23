@@ -10,6 +10,7 @@ pub enum Opcode {
     RJMP,   // relative jump
     JMPTL,  // jump to label
     VMCALL, // run commands in VM
+    EQ,     // checks if equal
 }
 
 #[derive(Debug, PartialEq)]
@@ -35,6 +36,7 @@ impl From<u8> for Opcode {
             6 => Opcode::RJMP,
             7 => Opcode::JMPTL,
             8 => Opcode::VMCALL,
+            9 => Opcode::EQ,
             _ => Opcode::IGL,
         }
     }
