@@ -290,4 +290,18 @@ mod tests {
         test_vm.program = vec![1, 0, 1, 255, 1, 1, 0, 0, 8, 1, 0, 0, 8, 1, 0, 0];
         test_vm.run();
     }
+
+    #[test]
+    fn test_eq_opcode() {
+        let mut test_vm = VM::new();
+        test_vm.registers[0] = 10;
+        test_vm.registers[1] = 10;
+        test_vm.program = vec![9, 0, 1, 3];
+        test_vm.run();
+        assert_eq!(test_vm.registers[3], 1 as i32);
+        test_vm.reset_program();
+        test_vm.registers[1] = 25;
+        test_vm.run();
+        assert_eq!(test_vm.registers[3], 0 as i32);
+    }
 }
