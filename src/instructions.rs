@@ -52,7 +52,6 @@ impl From<u8> for Opcode {
 mod tests {
     use super::*;
 
-
     #[test]
     fn test_create_instruction() {
         let instruction = Instruction::new(Opcode::HLT);
