@@ -16,6 +16,7 @@ pub enum Opcode {
     JNEQ,   // jumps if not true
     SWP,    // swaps two register values
     AND,    // AND
+    OR,     // OR
 }
 
 #[derive(Debug, PartialEq)]
@@ -47,6 +48,7 @@ impl From<u8> for Opcode {
             12 => Opcode::JNEQ,
             13 => Opcode::SWP,
             14 => Opcode::AND,
+            15 => Opcode::OR,
             _ => Opcode::IGL,
         }
     }

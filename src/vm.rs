@@ -227,6 +227,26 @@ impl VM {
                     )
                 }
             }
+            Opcode::OR => {
+                let register1 = self.registers[self.next_8_bits() as usize];
+                let register2 = self.registers[self.next_8_bits() as usize];
+                let output_register = self.next_8_bits() as usize;
+                if register1 == 0 || register1 == 1 || register2 == 1 || register2 == 0 {
+                    if (register1 == 1 && register2 == 1)
+                        || (register1 == 1 && register2 == 0)
+                        || (register1 == 0 && register2 == 1)
+                    {
+                        self.registers[output_register] = 1;
+                    } else {
+                        self.registers[output_register] = 0;
+                    }
+                } else {
+                    error!(
+                        "OR opcode arguments {} {} are not boolean",
+                        register1, register2
+                    )
+                }
+            }
             _ => {
                 println!(
                     "Unknown opcode at program set: {} program counter: {}",
