@@ -197,7 +197,7 @@ impl VM {
     pub fn reset_vm(&mut self) {
         self.reset_program();
         self.clean_registers();
-        self.program = vec!(0,0,0,0)
+        self.program = vec![0, 0, 0, 0]
     }
 }
 
