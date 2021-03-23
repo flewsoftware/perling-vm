@@ -21,6 +21,17 @@ impl VM {
         }
     }
 
+    pub fn get_register_usage(&mut self) -> i16 {
+        let mut used_reg_count: i16 = 0;
+        let reg_copy = self.registers.clone();
+        for i in reg_copy.iter() {
+            if i.clone() != 0 as i32 {
+                used_reg_count += 1;
+            }
+        }
+        return used_reg_count;
+    }
+
     // byte access
     /// returns the next 8 bits and increments the program counter
     fn next_8_bits(&mut self) -> u8 {
