@@ -109,7 +109,7 @@ impl VM {
             }
             Opcode::HLT => {
                 println!("HLT encountered");
-                return (true, 0);
+                return (false, 0);
             }
             Opcode::ADD => {
                 let register1 = self.registers[self.next_8_bits() as usize];
