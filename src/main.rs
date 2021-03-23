@@ -3,6 +3,7 @@ use log::info;
 use simplelog::*;
 use std::env;
 use std::fs::File;
+use std::mem;
 
 pub mod instructions;
 pub mod vm;
@@ -37,4 +38,5 @@ fn main() {
     }
     vm.run();
     info!("process used {} register(s)", vm.get_register_usage());
+    info!("process was allocated {}B", mem::size_of_val(&vm.registers))
 }
