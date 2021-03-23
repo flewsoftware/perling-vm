@@ -17,6 +17,7 @@ pub enum Opcode {
     SWP,    // swaps two register values
     AND,    // AND
     OR,     // OR
+    NOT,    // NOT
 }
 
 #[derive(Debug, PartialEq)]
@@ -35,20 +36,26 @@ impl From<u8> for Opcode {
         match v {
             0 => Opcode::HLT,
             1 => Opcode::LOAD,
+
             2 => Opcode::ADD,
             3 => Opcode::SUB,
             4 => Opcode::DIV,
+
             5 => Opcode::JMP,
             6 => Opcode::RJMP,
             7 => Opcode::JMPTL,
+
             8 => Opcode::VMCALL,
+
             9 => Opcode::EQ,
             10 => Opcode::JEQ,
             11 => Opcode::NEQ,
             12 => Opcode::JNEQ,
             13 => Opcode::SWP,
+
             14 => Opcode::AND,
             15 => Opcode::OR,
+            16 => Opcode::NOT,
             _ => Opcode::IGL,
         }
     }

@@ -247,6 +247,17 @@ impl VM {
                     )
                 }
             }
+            Opcode::NOT => {
+                let register1 = self.registers[self.next_8_bits() as usize];
+                let output_register = self.registers[self.next_8_bits() as usize] as usize;
+                if register1 == 0 {
+                    self.registers[output_register] = 1;
+                } else if register1 == 1 {
+                    self.registers[output_register] = 0;
+                } else {
+                    error!("NOT opcode arguments {} is not boolean", register1)
+                }
+            }
             _ => {
                 println!(
                     "Unknown opcode at program set: {} program counter: {}",
@@ -472,5 +483,22 @@ mod tests {
         test_vm.reset_program();
         test_vm.run();
         assert_eq!(test_vm.registers[3], 0);
+    }
+
+    #[test]
+    fn test_not_opcode() {
+        let mut test_vm = VM::new();
+        test_vm.registers[1] = 1;
+        test_vm.registers[3] = 3;
+        test_vm.program = vec![16, 1, 3, 0];
+        test_vm.run();
+        assert_eq!(test_vm.registers[3], 0);
+
+        test_vm.registers[1] = 0;
+        test_vm.registers[3] = 3;
+        test_vm.program = vec![16, 1, 3, 0];
+        test_vm.reset_program();
+        test_vm.run();
+        assert_eq!(test_vm.registers[3], 1);
     }
 }
