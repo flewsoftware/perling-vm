@@ -369,4 +369,9 @@ mod tests {
         test_vm.run_once();
         assert_eq!(test_vm.program_counter, 4);
 
+        test_vm.registers[1] = 0;
+        test_vm.reset_program();
+        test_vm.run_once();
+        assert_eq!(test_vm.program_counter, 7);
+    }
 }
