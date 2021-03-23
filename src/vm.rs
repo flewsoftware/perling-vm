@@ -383,4 +383,15 @@ mod tests {
         test_vm.run_once();
         assert_eq!(test_vm.program_counter, 7);
     }
+
+    #[test]
+    fn test_swp_opcode() {
+        let mut test_vm = VM::new();
+        test_vm.registers[1] = 1; // dest register
+        test_vm.registers[2] = 7; // bool source register
+        test_vm.program = vec![13, 1, 2, 0];
+        test_vm.run_once();
+        assert_eq!(test_vm.registers[1], 7);
+        assert_eq!(test_vm.registers[2], 1);
+    }
 }
