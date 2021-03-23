@@ -179,6 +179,26 @@ impl VM {
         self.program_counter = (self.program_set_counter as usize) * (4 as usize);
         return (true, 0);
     }
+
+    /// resets the register to original state
+    pub fn clean_registers(&mut self) {
+        for i in 0..(self.registers.len()) {
+            self.registers[i] = 0;
+        }
+    }
+
+    /// resets the program counter and set counter
+    pub fn reset_program(&mut self) {
+        self.program_counter = 0;
+        self.program_set_counter = 0;
+    }
+
+    /// cleans the registers and resets the vm to original state
+    pub fn reset_vm(&mut self) {
+        self.reset_program();
+        self.clean_registers();
+        self.program = vec!(0,0,0,0)
+    }
 }
 
 #[cfg(test)]
