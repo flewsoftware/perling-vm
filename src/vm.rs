@@ -360,5 +360,13 @@ mod tests {
         assert_eq!(test_vm.registers[3], 1 as i32);
     }
 
+    #[test]
+    fn test_jneq_opcode() {
+        let mut test_vm = VM::new();
+        test_vm.registers[1] = 1; // dest register
+        test_vm.registers[2] = 7; // bool source register
+        test_vm.program = vec![12, 1, 2, 0];
+        test_vm.run_once();
+        assert_eq!(test_vm.program_counter, 4);
 
 }
