@@ -91,11 +91,14 @@ impl VM {
     }
 
     pub fn execute_instruction(&mut self) -> (bool, i32) {
-        let (decoded_op, code) = self.decode_opcode();
-        info!("got new instruction {}", code);
         if self.program_counter >= self.program.len() {
+            info!("program end reached");
             return (false, 0);
         }
+
+        let (decoded_op, code) = self.decode_opcode();
+        info!("got new instruction {}", code);
+
         match decoded_op {
             Opcode::LOAD => {
                 let register = self.next_8_bits() as usize;
