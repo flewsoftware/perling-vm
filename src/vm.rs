@@ -409,4 +409,20 @@ mod tests {
         assert_eq!(test_vm.registers[1], 7);
         assert_eq!(test_vm.registers[2], 1);
     }
+
+    #[test]
+    fn test_and_opcode() {
+        let mut test_vm = VM::new();
+        test_vm.registers[1] = 1;
+        test_vm.registers[2] = 1;
+        test_vm.program = vec![14, 1, 2, 3];
+        test_vm.run();
+        assert_eq!(test_vm.registers[3], 1);
+
+        test_vm.registers[1] = 1;
+        test_vm.registers[2] = 0;
+        test_vm.reset_program();
+        test_vm.run();
+        assert_eq!(test_vm.registers[3], 0);
+    }
 }
