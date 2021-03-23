@@ -203,6 +203,15 @@ impl VM {
                     return (true, 0);
                 }
             }
+            Opcode::SWP => {
+                let reg1 = self.next_8_bits() as usize;
+                let reg2 = self.next_8_bits() as usize;
+                let reg1v = self.registers[reg1];
+                let reg2v = self.registers[reg2];
+
+                self.registers[reg1] = reg2v;
+                self.registers[reg2] = reg1v;
+            }
             _ => {
                 println!(
                     "Unknown opcode at program set: {} program counter: {}",
