@@ -182,9 +182,20 @@ impl VM {
                 let target = self.registers[self.next_8_bits() as usize];
                 if source == 1 {
                     self.program_counter = target as usize;
-                    return (true, 0)
+                    return (true, 0);
                 }
             }
+            Opcode::NEQ => {
+                let register1 = self.registers[self.next_8_bits() as usize];
+                let register2 = self.registers[self.next_8_bits() as usize];
+                let output_register = self.next_8_bits();
+                if register1 != register2 {
+                    self.registers[output_register as usize] = 1;
+                } else {
+                    self.registers[output_register as usize] = 0;
+                }
+            }
+
             _ => {
                 println!(
                     "Unknown opcode at program set: {} program counter: {}",
