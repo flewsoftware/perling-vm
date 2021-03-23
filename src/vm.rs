@@ -74,12 +74,10 @@ impl VM {
             1 => {
                 return (false, arg2);
             }
-            _ => {
-                panic!(
-                    "Invalid VM call, {}  at program set: {} program counter: {} ",
-                    call_name, self.program_set_counter, self.program_counter
-                )
-            }
+            _ => panic!(
+                "Invalid VM call, {}  at program set: {} program counter: {} ",
+                call_name, self.program_set_counter, self.program_counter
+            ),
         }
         return (true, 0);
     }
@@ -211,6 +209,23 @@ impl VM {
 
                 self.registers[reg1] = reg2v;
                 self.registers[reg2] = reg1v;
+            }
+            Opcode::AND => {
+                let register1 = self.registers[self.next_8_bits() as usize];
+                let register2 = self.registers[self.next_8_bits() as usize];
+                let output_register = self.next_8_bits() as usize;
+                if register1 == 0 || register1 == 1 || register2 == 1 || register2 == 0 {
+                    if register1 == 1 && register2 == 1 {
+                        self.registers[output_register] = 1;
+                    } else {
+                        self.registers[output_register] = 0;
+                    }
+                } else {
+                    error!(
+                        "AND opcode arguments {} {} are not boolean",
+                        register1, register2
+                    )
+                }
             }
             _ => {
                 println!(
