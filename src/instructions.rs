@@ -18,6 +18,7 @@ pub enum Opcode {
     AND,    // AND
     OR,     // OR
     NOT,    // NOT
+    GET,    // mv a value from a hidden register to a normal register
 }
 
 #[derive(Debug, PartialEq)]
@@ -56,6 +57,8 @@ impl From<u8> for Opcode {
             14 => Opcode::AND,
             15 => Opcode::OR,
             16 => Opcode::NOT,
+
+            17 => Opcode::GET,
             _ => Opcode::IGL,
         }
     }
