@@ -6,6 +6,7 @@ use std::fs::File;
 use std::mem;
 
 pub mod instructions;
+pub mod register;
 pub mod stack;
 pub mod vm;
 
