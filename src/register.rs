@@ -1,3 +1,5 @@
+use log::error;
+
 #[derive(Debug, Clone, Copy)]
 pub struct REGISTER {
     pub content: i32,
