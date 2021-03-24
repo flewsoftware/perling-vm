@@ -19,6 +19,7 @@ pub enum Opcode {
     OR,     // OR
     NOT,    // NOT
     GET,    // mv a value from a hidden register to a normal register
+    LOCKR,  // locks a register similar to a constant
 }
 
 #[derive(Debug, PartialEq)]
@@ -59,6 +60,7 @@ impl From<u8> for Opcode {
             16 => Opcode::NOT,
 
             17 => Opcode::GET,
+            18 => Opcode::LOCKR,
             _ => Opcode::IGL,
         }
     }

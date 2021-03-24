@@ -118,7 +118,7 @@ impl VM {
                 let number = self.next_16_bits() as u32;
                 info!("Loading {} to R{}", number, register);
                 // loads the number into the register
-                self.registers[register].content = number as i32;
+                self.registers[register].do_set(number as i32);
             }
             Opcode::HLT => {
                 println!("HLT encountered");
@@ -137,7 +137,7 @@ impl VM {
                     register1, register2, output_register
                 );
                 // loads the sum of register 1 & 2 into the
-                self.registers[output_register as usize].content = register1 + register2;
+                self.registers[output_register as usize].do_set(register1 + register2);
             }
             Opcode::SUB => {
                 let register1 = self.registers
@@ -152,7 +152,7 @@ impl VM {
                     register1, register2, output_register
                 );
                 // loads the subtraction of register 1 & 2 into the
-                self.registers[output_register as usize].content = register1 - register2;
+                self.registers[output_register as usize].do_set(register1 - register2);
             }
             Opcode::DIV => {
                 let register1 = self.registers
@@ -161,7 +161,7 @@ impl VM {
                 let register2 = self.registers
                     [self.registers[self.next_8_bits() as usize].content as usize]
                     .content;
-                self.registers[self.next_8_bits() as usize].content = register1 / register2;
+                self.registers[self.next_8_bits() as usize].do_set(register1 / register2);
                 self.remainder = (register1 % register2) as i32;
             }
             Opcode::JMP => {
@@ -196,9 +196,9 @@ impl VM {
                 let register2 = self.registers[self.next_8_bits() as usize].content;
                 let output_register = self.registers[self.next_8_bits() as usize].content as usize;
                 if register1 == register2 {
-                    self.registers[output_register as usize].content = 1;
+                    self.registers[output_register as usize].do_set(1);
                 } else {
-                    self.registers[output_register as usize].content = 0;
+                    self.registers[output_register as usize].do_set(0);
                 }
             }
             Opcode::JEQ => {
@@ -222,9 +222,9 @@ impl VM {
                     .content;
                 let output_register = self.registers[self.next_8_bits() as usize].content as usize;
                 if register1 != register2 {
-                    self.registers[output_register as usize].content = 1;
+                    self.registers[output_register as usize].do_set(1);
                 } else {
-                    self.registers[output_register as usize].content = 0;
+                    self.registers[output_register as usize].do_set(0);
                 }
             }
             Opcode::JNEQ => {
@@ -246,8 +246,8 @@ impl VM {
                 let reg1v = self.registers[reg1].content;
                 let reg2v = self.registers[reg2].content;
 
-                self.registers[reg1].content = reg2v;
-                self.registers[reg2].content = reg1v;
+                self.registers[reg1].do_set(reg2v);
+                self.registers[reg2].do_set(reg1v);
             }
             Opcode::AND => {
                 let register1 = self.registers
@@ -259,9 +259,9 @@ impl VM {
                 let output_register = self.registers[self.next_8_bits() as usize].content as usize;
                 if register1 == 0 || register1 == 1 || register2 == 1 || register2 == 0 {
                     if register1 == 1 && register2 == 1 {
-                        self.registers[output_register].content = 1;
+                        self.registers[output_register].do_set(1);
                     } else {
-                        self.registers[output_register].content = 0;
+                        self.registers[output_register].do_set(0);
                     }
                 } else {
                     error!(
@@ -283,9 +283,9 @@ impl VM {
                         || (register1 == 1 && register2 == 0)
                         || (register1 == 0 && register2 == 1)
                     {
-                        self.registers[output_register].content = 1;
+                        self.registers[output_register].do_set(1);
                     } else {
-                        self.registers[output_register].content = 0;
+                        self.registers[output_register].do_set(0);
                     }
                 } else {
                     error!(
@@ -300,9 +300,9 @@ impl VM {
                     .content;
                 let output_register = self.registers[self.next_8_bits() as usize].content as usize;
                 if register1 == 0 {
-                    self.registers[output_register].content = 1;
+                    self.registers[output_register].do_set(1);
                 } else if register1 == 1 {
-                    self.registers[output_register].content = 0;
+                    self.registers[output_register].do_set(0);
                 } else {
                     error!("NOT opcode arguments {} is not boolean", register1)
                 }
@@ -313,27 +313,18 @@ impl VM {
                 match hidden_register_id {
                     // remainder register
                     0 => {
-                        self.registers[output_register].content = self.remainder;
+                        self.registers[output_register].do_set(self.remainder);
                         self.remainder = 0;
                     }
                     _ => {
-                        self.registers[output_register].content = 0;
+                        self.registers[output_register].do_set(0);
                     }
                 }
             }
             Opcode::LOCKR => {
-                let hidden_register_id = self.registers[self.next_8_bits() as usize].content;
-                let output_register = self.registers[self.next_8_bits() as usize].content as usize;
-                match hidden_register_id {
-                    // remainder register
-                    0 => {
-                        self.registers[output_register].content = self.remainder;
-                        self.remainder = 0;
-                    }
-                    _ => {
-                        self.registers[output_register].content = 0;
-                    }
-                }
+                let register_to_toggle_lock =
+                    self.registers[self.next_8_bits() as usize].content as usize;
+                self.registers[register_to_toggle_lock].toggle_lock();
             }
             _ => {
                 println!(
