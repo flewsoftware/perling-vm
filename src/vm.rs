@@ -132,10 +132,6 @@ impl VM {
                     [self.registers[self.next_8_bits() as usize].content as usize]
                     .content;
                 let output_register = self.registers[self.next_8_bits() as usize].content;
-                info!(
-                    "adding {} + {} to R{}",
-                    register1, register2, output_register
-                );
                 // loads the sum of register 1 & 2 into the
                 self.registers[output_register as usize].do_set(register1 + register2);
             }
@@ -147,10 +143,6 @@ impl VM {
                     [self.registers[self.next_8_bits() as usize].content as usize]
                     .content;
                 let output_register = self.registers[self.next_8_bits() as usize].content;
-                print!(
-                    "adding {} - {} to R{}",
-                    register1, register2, output_register
-                );
                 // loads the subtraction of register 1 & 2 into the
                 self.registers[output_register as usize].do_set(register1 - register2);
             }
@@ -165,17 +157,21 @@ impl VM {
                 self.remainder = (register1 % register2) as i32;
             }
             Opcode::JMP => {
+                let current_pos = self.program_counter;
                 let target = self.registers
                     [self.registers[self.next_8_bits() as usize].content as usize]
                     .content;
                 self.program_counter = target as usize;
+                info!("jumped from {} to {}", current_pos, target);
                 return (true, 0);
             }
             Opcode::RJMP => {
+                let current_pos = self.program_counter;
                 let value = self.registers
                     [self.registers[self.next_8_bits() as usize].content as usize]
                     .content;
                 self.program_counter += value as usize;
+                info!("jumped from {} to {}", current_pos, self.program_counter);
                 return (true, 0);
             }
             Opcode::VMCALL => {
@@ -206,6 +202,7 @@ impl VM {
                 }
             }
             Opcode::JEQ => {
+                let current_pos = self.program_counter;
                 let source = self.registers
                     [self.registers[self.next_8_bits() as usize].content as usize]
                     .content;
@@ -216,6 +213,7 @@ impl VM {
                     self.program_counter = target as usize;
                     return (true, 0);
                 }
+                info!("jumped from {} to {}", current_pos, target);
             }
             Opcode::NEQ => {
                 let register1 = self.registers
@@ -232,6 +230,7 @@ impl VM {
                 }
             }
             Opcode::JNEQ => {
+                let current_pos = self.program_counter;
                 let source = self.registers
                     [self.registers[self.next_8_bits() as usize].content as usize]
                     .content;
@@ -241,6 +240,7 @@ impl VM {
 
                 if source == 0 {
                     self.program_counter = target as usize;
+                    info!("jumped from {} to {}", current_pos, target);
                     return (true, 0);
                 }
             }
@@ -252,6 +252,8 @@ impl VM {
 
                 self.registers[reg1].do_set(reg2v);
                 self.registers[reg2].do_set(reg1v);
+
+                info!("swaped R{} with R{}", reg1, reg2)
             }
             Opcode::AND => {
                 let register1 = self.registers
@@ -324,11 +326,19 @@ impl VM {
                         self.registers[output_register].do_set(0);
                     }
                 }
+                info!(
+                    "Moved hidden R{} content to R{}",
+                    hidden_register_id, output_register,
+                )
             }
             Opcode::LOCKR => {
                 let register_to_toggle_lock =
                     self.registers[self.next_8_bits() as usize].content as usize;
                 self.registers[register_to_toggle_lock].toggle_lock();
+                info!(
+                    "R{} is now locked:{}",
+                    register_to_toggle_lock, self.registers[register_to_toggle_lock].locked,
+                )
             }
             _ => {
                 println!(
@@ -494,7 +504,7 @@ mod tests {
         test_vm.program = vec![9, 4, 5, 3];
         test_vm.run();
         assert_eq!(test_vm.registers[3].content, 1 as i32);
-        
+
         test_vm.reset_program();
         test_vm.registers[1].content = 25;
         test_vm.registers[3].content = 3;
