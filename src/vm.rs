@@ -192,8 +192,12 @@ impl VM {
                 return self.execute_vm_call(call_name, arg1, arg2); // returns false if kill
             }
             Opcode::EQ => {
-                let register1 = self.registers[self.next_8_bits() as usize].content;
-                let register2 = self.registers[self.next_8_bits() as usize].content;
+                let register1 = self.registers
+                    [self.registers[self.next_8_bits() as usize].content as usize]
+                    .content;
+                let register2 = self.registers
+                    [self.registers[self.next_8_bits() as usize].content as usize]
+                    .content;
                 let output_register = self.registers[self.next_8_bits() as usize].content as usize;
                 if register1 == register2 {
                     self.registers[output_register as usize].do_set(1);
@@ -484,9 +488,13 @@ mod tests {
         test_vm.registers[0].content = 10;
         test_vm.registers[1].content = 10;
         test_vm.registers[3].content = 3;
-        test_vm.program = vec![9, 0, 1, 3];
+
+        test_vm.registers[4].content = 0;
+        test_vm.registers[5].content = 1;
+        test_vm.program = vec![9, 4, 5, 3];
         test_vm.run();
         assert_eq!(test_vm.registers[3].content, 1 as i32);
+        
         test_vm.reset_program();
         test_vm.registers[1].content = 25;
         test_vm.registers[3].content = 3;
