@@ -1,23 +1,17 @@
 use crate::register;
 use std::cmp::PartialEq;
-use std::ops::Add;
 
 #[derive(Debug, PartialEq)]
 pub struct STACK {
     pub content: Vec<i32>,
 }
 
-impl Add<register::REGISTER> for STACK {
-    type Output = STACK;
-
-    fn add(self, other: register::REGISTER) -> STACK {
-        let mut temp_content = self.content;
-        temp_content.push(other.content);
-        return STACK {
-            content: temp_content,
-        };
+impl STACK {
+    pub fn add_register(&mut self, register: register::REGISTER) {
+        self.content.push(register.content);
     }
 }
+
 
 #[cfg(test)]
 mod tests {
@@ -29,15 +23,15 @@ mod tests {
             content: 2,
             locked: false,
         };
-        let test_stack = STACK {
+        let mut test_stack = STACK {
             content: vec![3, 5],
         };
+        test_stack.add_register(test_register);
         assert_eq!(
-            test_stack + test_register + test_register,
+            test_stack,
             STACK {
-                content: vec![3, 5, 2, 2],
+                content: vec![3, 5, 2],
             },
         );
     }
-
 }
