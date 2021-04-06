@@ -19,8 +19,8 @@ You can find examples of Perling byte code in the examples directory, they can b
 | DIV    | 0x04 | Gets the division of two values in registers and stores it in another register    |
 | JMP    | 0x05 | Changes the program counter                                                       |
 | RJMP   | 0x06 | Changes the program counter relative to the position                              |
-| JMPTL  | 0x06 | Changes the program counter to the position of the label (Not implemented yet)    |
-| VMCALL | 0x07 | Calls the inbuilt functions(print, etc..) with upto 2 arguments                   |
+| JMPTL  | 0x07 | Changes the program counter to the position of the label (Not implemented yet)    |
+| VMCALL | 0x08 | Calls the inbuilt functions(print, etc..) with upto 2 arguments                   |
 | EQ     | 0x09 | checks if equal                                                                   |
 | JEQ    | 0x0A | jumps if equal                                                                    |
 | NEQ    | 0x0B | checks if not equal                                                               |
