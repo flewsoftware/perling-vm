@@ -353,6 +353,10 @@ impl VM {
                 self.stack.add_register(self.registers[target_register]);
                 self.registers[target_register].content = 0;
             }
+            Opcode::POPRFS => {
+                let target_register = self.registers[self.next_8_bits() as usize].content as usize;
+                self.registers[target_register].content = self.stack.content.pop().unwrap();
+            }
             _ => {
                 println!(
                     "Unknown opcode at program set: {} program counter: {}",
@@ -706,5 +710,15 @@ mod tests {
         assert_eq!(test_vm.stack.content.pop(), Some(2));
         assert_eq!(test_vm.registers[1].content, 0)
     }
-
+    #[test]
+    fn test_poprfs_opcode() {
+        let mut test_vm = VM::new();
+        test_vm.stack.content.push(10);
+        test_vm.registers[1].content = 0;
+        test_vm.registers[3].content = 1;
+        test_vm.remainder = 2;
+        test_vm.program = vec![20, 3, 0];
+        test_vm.run();
+        assert_eq!(test_vm.registers[1].content, 10)
+    }
 }
