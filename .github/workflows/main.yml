@@ -18,13 +18,10 @@ jobs:
           toolchain: stable
           target: x86_64-pc-windows-gnu
           
-      - name: "Build linux"
         run: |
           cargo build --release
           echo "done build linux!"
           
-      - name: "Build windows"
-        run: |
           cargo build --release --target=x86_64-pc-windows-gnu
           echo "done build windows!"
 
