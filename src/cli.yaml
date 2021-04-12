@@ -1,0 +1,13 @@
+name: perlinVM
+version: "1.0"
+author: Tarith Jayasooria. <tarithj@gmail.com>
+about: Interprets perling bin files
+args:
+    - FILE:
+        about: Sets the input file to use
+        required: true
+        index: 1
+    - loginfo:
+        short: i
+        multiple: false
+        about: Enables info logs
