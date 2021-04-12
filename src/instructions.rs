@@ -20,6 +20,7 @@ pub enum Opcode {
     NOT,    // NOT
     GET,    // mv a value from a hidden register to a normal register
     LOCKR,  // locks a register similar to a constant
+    PUSHRTS,   // push register to stack
 }
 
 #[derive(Debug, PartialEq)]
@@ -61,6 +62,8 @@ impl From<u8> for Opcode {
 
             17 => Opcode::GET,
             18 => Opcode::LOCKR,
+
+            19 => Opcode::PUSHRTS,
             _ => Opcode::IGL,
         }
     }
