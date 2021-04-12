@@ -1,5 +1,6 @@
 use crate::instructions::Opcode;
 use crate::register::REGISTER;
+use crate::stack::STACK;
 use log::{error, info};
 
 #[derive(Debug)]
@@ -9,6 +10,7 @@ pub struct VM {
     pub program: Vec<u8>,
     pub remainder: i32,
     pub program_set_counter: i32,
+    pub stack: STACK,
 }
 
 impl VM {
@@ -22,6 +24,7 @@ impl VM {
             program_counter: 0,
             program_set_counter: 0,
             remainder: 0,
+            stack: STACK { content: vec![0] },
         }
     }
 
@@ -161,7 +164,9 @@ impl VM {
                 let target = self.registers
                     [self.registers[self.next_8_bits() as usize].content as usize]
                     .content;
-                self.program_counter = target as usize;
+                self.program_set_counter = target;
+                self.program_counter = 0;
+
                 info!("jumped from {} to {}", current_pos, target);
                 return (true, 0);
             }
@@ -170,7 +175,8 @@ impl VM {
                 let value = self.registers
                     [self.registers[self.next_8_bits() as usize].content as usize]
                     .content;
-                self.program_counter += value as usize;
+                self.program_set_counter += value;
+                self.program_counter = 0;
                 info!("jumped from {} to {}", current_pos, self.program_counter);
                 return (true, 0);
             }
@@ -210,7 +216,8 @@ impl VM {
                     [self.registers[self.next_8_bits() as usize].content as usize]
                     .content;
                 if source == 1 {
-                    self.program_counter = target as usize;
+                    self.program_counter = 0 as usize;
+                    self.program_set_counter = target;
                     return (true, 0);
                 }
                 info!("jumped from {} to {}", current_pos, target);
@@ -239,7 +246,8 @@ impl VM {
                     .content;
 
                 if source == 0 {
-                    self.program_counter = target as usize;
+                    self.program_set_counter = target;
+                    self.program_counter = 0 as usize;
                     info!("jumped from {} to {}", current_pos, target);
                     return (true, 0);
                 }
@@ -339,6 +347,11 @@ impl VM {
                     "R{} is now locked:{}",
                     register_to_toggle_lock, self.registers[register_to_toggle_lock].locked,
                 )
+            }
+            Opcode::PUSHRTS => {
+                let target_register = self.registers[self.next_8_bits() as usize].content as usize;
+                self.stack.add_register(self.registers[target_register]);
+                self.registers[target_register].content = 0;
             }
             _ => {
                 println!(
@@ -463,7 +476,7 @@ mod tests {
         test_vm.registers[1].content = 0;
         test_vm.program = vec![5, 1, 0, 0];
         test_vm.run_once();
-        assert_eq!(test_vm.program_counter, 1);
+        assert_eq!(test_vm.program_set_counter, 1);
     }
 
     #[test]
@@ -473,7 +486,7 @@ mod tests {
         test_vm.registers[1].content = 0;
         test_vm.program = vec![6, 1, 0, 0, 0, 0, 0, 0];
         test_vm.run_once();
-        assert_eq!(test_vm.program_counter, 4);
+        assert_eq!(test_vm.program_set_counter, 2);
     }
 
     #[test]
@@ -522,12 +535,12 @@ mod tests {
         test_vm.registers[4].content = 2;
         test_vm.program = vec![10, 3, 4, 0];
         test_vm.run_once();
-        assert_eq!(test_vm.program_counter, 7);
+        assert_eq!(test_vm.program_set_counter, 7);
 
         test_vm.registers[1].content = 0;
         test_vm.reset_program();
         test_vm.run_once();
-        assert_eq!(test_vm.program_counter, 4);
+        assert_eq!(test_vm.program_set_counter, 1);
     }
 
     #[test]
@@ -559,12 +572,12 @@ mod tests {
         test_vm.registers[4].content = 2;
         test_vm.program = vec![12, 3, 4, 0];
         test_vm.run_once();
-        assert_eq!(test_vm.program_counter, 4);
+        assert_eq!(test_vm.program_set_counter, 1);
 
         test_vm.registers[1].content = 0;
         test_vm.reset_program();
         test_vm.run_once();
-        assert_eq!(test_vm.program_counter, 7);
+        assert_eq!(test_vm.program_set_counter, 7);
     }
 
     #[test]
@@ -681,4 +694,17 @@ mod tests {
         test_vm.run();
         assert_eq!(test_vm.registers[3].content, 2);
     }
+
+    #[test]
+    fn test_prts_opcode() {
+        let mut test_vm = VM::new();
+        test_vm.registers[1].content = 2;
+        test_vm.registers[3].content = 1;
+        test_vm.remainder = 2;
+        test_vm.program = vec![19, 3, 0];
+        test_vm.run();
+        assert_eq!(test_vm.stack.content.pop(), Some(2));
+        assert_eq!(test_vm.registers[1].content, 0)
+    }
+
 }
