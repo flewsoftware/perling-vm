@@ -29,7 +29,7 @@ jobs:
           echo "done build linux!"
           cargo build --release --target=x86_64-pc-windows-gnu
           echo "done build windows!"
-          echo "$(ls target/release/)"
+          echo "$(ls target/)"
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
