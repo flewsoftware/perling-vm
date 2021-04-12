@@ -29,7 +29,7 @@ jobs:
           echo "done build linux!"
           cargo build --release --target=x86_64-pc-windows-gnu
           echo "done build windows!"
-          echo "$(ls target/)"
+          echo "$(ls target/x86_64-pc-windows-gnu/release)"
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -40,4 +40,4 @@ jobs:
           files: |
             LICENSE.txt
             target/release/perling_vm
-            target/release/perling_vm.exe
+            target/x86_64-pc-windows-gnu/release/perling_vm.exe
