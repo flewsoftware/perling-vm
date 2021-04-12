@@ -19,6 +19,10 @@ jobs:
           toolchain: stable
           target: x86_64-pc-windows-gnu
 
+      - name: "Install MINGW"
+        run: |
+          sudo apt-get install mingw-w64
+          
       - name: "Build"
         run: |
           cargo build --release
@@ -36,3 +40,4 @@ jobs:
           files: |
             LICENSE
             target/release/perling_vm
+            target/release/perling_vm.exe
