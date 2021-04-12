@@ -32,4 +32,5 @@ You can find examples of Perling byte code in the examples directory, they can b
 | GET    | 0x11 | mv a value from a hidden register to a normal register                            |
 | LOCKR  | 0x12 | marks a register as Read-only                                                     |
 | PUSHRTS| 0x13 | pushes register content to stack and resets the register value                    |
+| POPRFS | 0x14 | pops a value from stack and sets it as the value of the register                  |
 | IGL    | N/A  | Illegal opcode that will cause panic                                              |
