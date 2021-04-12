@@ -38,6 +38,6 @@ jobs:
           prerelease: true
           title: "Development Build"
           files: |
-            LICENSE
+            LICENSE.txt
             target/release/perling_vm
             target/release/perling_vm.exe
