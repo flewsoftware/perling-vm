@@ -15,8 +15,8 @@ You can find examples of Perling byte code in the examples directory, they can b
 | HLT                   | 0x00 | Halts the program                                                                 |
 | [LOAD](./docs/LOAD.md)| 0x01 | Loads data to a register                                                          |
 | [ADD](./docs/ADD.md)  | 0x02 | Gets the addition of two values in registers and stores it in another register    |
-| SUB    | 0x03 | Gets the subtraction of two values in registers and stores it in another register |
-| DIV    | 0x04 | Gets the division of two values in registers and stores it in another register    |
+| [SUB](./docs/SUB.md)  | 0x03 | Gets the subtraction of two values in registers and stores it in another register |
+| [DIV](./docs/DIV.md)  | 0x04 | Gets the division of two values in registers and stores it in another register    |
 | JMP    | 0x05 | Changes the program counter                                                       |
 | RJMP   | 0x06 | Changes the program counter relative to the position                              |
 | JMPTL  | 0x07 | Changes the program counter to the position of the label (Not implemented yet)    |
