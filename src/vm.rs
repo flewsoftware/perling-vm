@@ -2,6 +2,7 @@ use crate::instructions::Opcode;
 use crate::register::REGISTER;
 use crate::stack::STACK;
 use log::{error, info};
+use crate::debug::DebugEngine;
 
 #[derive(Debug)]
 pub struct VM {
@@ -356,6 +357,11 @@ impl VM {
             Opcode::POPRFS => {
                 let target_register = self.registers[self.next_8_bits() as usize].content as usize;
                 self.registers[target_register].content = self.stack.content.pop().unwrap();
+            }
+            Opcode::BREAK => {
+                println!("hit BREAK on line:{}", self.program_set_counter);
+                let mut d = DebugEngine{};
+                d.wait_for_commands(self, std::io::stdin());
             }
             _ => {
                 println!(
