@@ -22,6 +22,7 @@ pub enum Opcode {
     LOCKR,  // locks a register similar to a constant
     PUSHRTS,   // push register to stack
     POPRFS,    // pop register from stack
+    BREAK,     // breaks the program
 }
 
 #[derive(Debug, PartialEq)]
@@ -66,6 +67,8 @@ impl From<u8> for Opcode {
 
             19 => Opcode::PUSHRTS,
             20 => Opcode::POPRFS,
+
+            21 => Opcode::BREAK,
             _ => Opcode::IGL,
         }
     }
