@@ -66,7 +66,7 @@ jobs:
         with:
           tag_name: ${{ steps.tag_version.outputs.new_tag }}
           name: Nightly Build ${{ steps.current-time.outputs.formattedTime }}
-          body: ${{ steps.generate-release-changelog.outputs.changelog }}
+          body: This is a nighly build and theres no guarantee that this build will work. If for some reason it dosent please use the last nightly build
           files: |
             LICENSE.txt
             target/release/perling_vm
