@@ -1,5 +1,6 @@
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/flew-software/perling-vm)
 [![pre-release](https://github.com/flew-software/perling-vm/actions/workflows/main.yml/badge.svg)](https://github.com/flew-software/perling-vm/actions/workflows/main.yml)   
+[![Nighlty Release](https://github.com/flew-software/perling-vm/actions/workflows/nightly.yml/badge.svg)](https://github.com/flew-software/perling-vm/actions/workflows/nightly.yml)    
 <sub>**Perling VM** is part of the Perling project</sub>
 
 ## What is perling VM
