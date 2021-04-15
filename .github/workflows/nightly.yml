@@ -64,6 +64,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: ${{ steps.tag_version.outputs.new_tag }}
           name: Nightly Build ${{ steps.current-time.outputs.formattedTime }}
           body: ${{ steps.generate-release-changelog.outputs.changelog }}
           files: |
