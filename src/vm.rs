@@ -389,6 +389,7 @@ impl VM {
         self.program_set_counter = 0;
     }
 
+    #[deprecated (note="please replace VM instance with a new one instead of reset_vm")]
     /// cleans the registers and resets the vm to original state
     pub fn reset_vm(&mut self) {
         self.reset_program();
