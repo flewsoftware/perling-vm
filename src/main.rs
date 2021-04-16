@@ -12,6 +12,7 @@ pub mod register;
 pub mod stack;
 pub mod vm;
 mod debug;
+mod label;
 
 fn main() {
     let mut location = "";
