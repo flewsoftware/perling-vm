@@ -23,6 +23,8 @@ pub enum Opcode {
     PUSHRTS,   // push register to stack
     POPRFS,    // pop register from stack
     BREAK,     // breaks the program
+    LABEL,     // creates a label
+    GOTO,      // goto a label
 }
 
 #[derive(Debug, PartialEq)]
@@ -69,6 +71,10 @@ impl From<u8> for Opcode {
             20 => Opcode::POPRFS,
 
             21 => Opcode::BREAK,
+
+            22 => Opcode::LABEL,
+            23 => Opcode::GOTO,
+
             _ => Opcode::IGL,
         }
     }
