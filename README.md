@@ -2,6 +2,8 @@
 [![pre-release](https://github.com/flew-software/perling-vm/actions/workflows/main.yml/badge.svg)](https://github.com/flew-software/perling-vm/actions/workflows/main.yml)
 ![GitHub repo size](https://img.shields.io/github/repo-size/flew-software/perling-vm)   
 ![Lines of code](https://img.shields.io/tokei/lines/github/flew-software/perling-vm)
+[![Nighlty Release](https://github.com/flew-software/perling-vm/actions/workflows/nightly.yml/badge.svg)](https://github.com/flew-software/perling-vm/actions/workflows/nightly.yml)    
+
 <sub>**Perling VM** is part of the Perling project</sub>
 
 ## What is perling VM
