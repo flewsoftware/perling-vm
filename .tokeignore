@@ -1,0 +1,5 @@
+*.md
+*.toml
+*.bin
+*.yml
+*.txt
