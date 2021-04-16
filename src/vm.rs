@@ -3,15 +3,17 @@ use crate::register::REGISTER;
 use crate::stack::STACK;
 use log::{error, info};
 use crate::debug::DebugEngine;
+use crate::label::LABEL;
 
 #[derive(Debug)]
 pub struct VM {
     pub registers: [REGISTER; 32],
-    pub program_counter: usize,
-    pub program: Vec<u8>,
-    pub remainder: i32,
-    pub program_set_counter: i32,
-    pub stack: STACK,
+    pub program_counter: usize,     // current byte
+    pub program: Vec<u8>,           // program instructions
+    pub remainder: i32,             // remainder of div opcode
+    pub program_set_counter: i32,   // current line
+    pub stack: STACK,               // stack data
+    pub labels: Vec<LABEL>          // label data
 }
 
 impl VM {
@@ -26,6 +28,7 @@ impl VM {
             program_set_counter: 0,
             remainder: 0,
             stack: STACK { content: vec![0] },
+            labels: vec![LABEL{ id: 0, location: 0 }],
         }
     }
 
@@ -362,6 +365,26 @@ impl VM {
                 println!("hit BREAK on line:{}", self.program_set_counter);
                 let mut d = DebugEngine{};
                 d.wait_for_commands(self, std::io::stdin());
+            }
+            Opcode::LABEL => {
+                let label_id = self.next_8_bits() as i32;
+                self.labels.append(&mut vec![LABEL{ id: label_id, location: self.program_set_counter }]);
+            }
+            Opcode::GOTO => {
+                let label_id = self.next_8_bits() as i32;
+                let mut found = false;
+                for label in self.labels.iter() {
+                    if label.id == label_id {
+                        self.program_set_counter = label.location;
+                        self.program_counter = 0;
+                        found = true;
+                        break
+                    }
+                }
+                if !found {
+                    error!("GOTO label {} not found", label_id);
+                }
+                return (true, 0)
             }
             _ => {
                 println!(
@@ -727,5 +750,29 @@ mod tests {
         test_vm.program = vec![20, 3, 0];
         test_vm.run();
         assert_eq!(test_vm.registers[1].content, 10)
+    }
+    #[test]
+    fn test_label_opcode() {
+        let mut test_vm = VM::new();
+        test_vm.stack.content.push(10);
+        test_vm.remainder = 2;
+        test_vm.program = vec![1, 1, 1, 1, 22, 3, 0, 0,  1, 1, 1, 1,  1, 1, 1, 1];
+        test_vm.run();
+        assert_eq!(test_vm.labels[1].id, 3);
+        assert_eq!(test_vm.labels[1].location, 1);
+    }
+    #[test]
+    fn test_goto_opcode() {
+        let mut test_vm = VM::new();
+        test_vm.stack.content.push(10);
+        test_vm.remainder = 2;
+        test_vm.program = vec![1, 1, 1, 1,  1, 1, 1, 1,  1, 1, 1, 1,  23, 3, 0, 0];
+        test_vm.labels.append(&mut vec![LABEL { id: 3, location: 2 }]);
+        for _ in 0..4 {
+            test_vm.run_once();
+        }
+
+        assert_eq!(test_vm.program_counter, 0);
+        assert_eq!(test_vm.program_set_counter, 2);
     }
 }
