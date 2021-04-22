@@ -35,7 +35,7 @@ impl REGISTER {
     }
 }
 
-pub fn register_from_string(s: &str, reg_array: *[REGISTER]) {
+pub fn register_from_string(s: &str, reg_array: &[REGISTER]) {
     let key_val_pairs = s.split("\n");
     for key_val_pair in key_val_pairs {
         let sep = key_val_pair.split(":");
