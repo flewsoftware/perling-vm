@@ -35,6 +35,18 @@ impl REGISTER {
     }
 }
 
+fn register_from_string(s: &str, reg_array: *[REGISTER]) {
+    let key_val_pairs = s.split("\n");
+    for key_val_pair in key_val_pairs {
+        let sep = key_val_pair.split(":");
+        let key = sep[0];
+        let val = sep[1];
+        reg_array[key] = val;
+    }
+}
+
+
+
 #[cfg(test)]
 mod tests {
     use super::*;
