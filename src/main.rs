@@ -15,13 +15,15 @@ mod debug;
 mod label;
 
 fn main() {
-    let mut location = "";
     let yaml = load_yaml!("cli.yaml");
     let matches = App::from(yaml).get_matches();
-    if let Some(x) = matches.value_of("FILE") {
-        location = x;
-    }
+    let location = matches.value_of("FILE").unwrap();
+    let mut register_file_location = "";
 
+    if let Some(x) = matches.value_of("reg") {
+        register_file_location = x;
+    }
+    println!("{}",register_file_location);
     let info_log_filter = match matches.is_present("loginfo") {
         true => LevelFilter::Info,
         _ => LevelFilter::Off,
@@ -55,9 +57,16 @@ fn main() {
         .unwrap()
         .bytes()
         .map(|ch| ch.unwrap());
+
     let mut vm = VM::new();
     for i in file {
         vm.program.append(&mut vec![i]);
+    }
+    if register_file_location != "" {
+        let mut buffer = String::new();
+        std::fs::File::open(register_file_location).unwrap().read_to_string(&mut buffer).unwrap();
+        println!("{}",buffer);
+        register::register_from_string(&buffer, &mut vm.registers)
     }
     vm.run();
     info!("process used {} register(s)", vm.get_register_usage());

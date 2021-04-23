@@ -1,6 +1,6 @@
 use log::error;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct REGISTER {
     pub content: i32,
     pub locked: bool,
@@ -34,6 +34,27 @@ impl REGISTER {
         }
     }
 }
+
+pub fn register_from_string(s: &str, reg_array: &mut [REGISTER]) {
+    let key_val_pairs: Vec<&str> = s.split("\n").collect();
+    for key_val_pair in key_val_pairs {
+        if key_val_pair.is_empty() {
+            continue;
+        }
+        let sep: Vec<&str> = key_val_pair.split(":").collect();
+        let key = sep[0].parse::<usize>().unwrap();
+        let val = sep[1].parse::<i32>().unwrap();
+        let locked = sep[2];
+        reg_array[key].content = val;
+        if locked == "1" {
+            reg_array[key].locked = true;
+        } else {
+            reg_array[key].locked = false;
+        }
+    }
+}
+
+
 
 #[cfg(test)]
 mod tests {
@@ -85,5 +106,13 @@ mod tests {
         assert_eq!(test_reg.content, 3);
         assert_eq!(sucessful, false);
 
+    }
+
+    #[test]
+    fn test_register_from_string() {
+        let s = "0:5:1\n1:10:0";
+        let mut m = [REGISTER{ content: 0, locked: false }; 2];
+        register_from_string(s, &mut m);
+        assert_eq!(m[0], REGISTER{ content: 5, locked: true });
     }
 }

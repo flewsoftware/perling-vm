@@ -11,3 +11,8 @@ args:
         short: i
         multiple: false
         about: Enables info logs
+    - reg:
+        long: reg
+        multiple: false
+        about: Imports registers from specified file
+        takes_value: true
