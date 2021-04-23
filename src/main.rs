@@ -18,10 +18,12 @@ fn main() {
     let yaml = load_yaml!("cli.yaml");
     let matches = App::from(yaml).get_matches();
     let location = matches.value_of("FILE").unwrap();
-    let register_file_location = matches.value_of("reg").unwrap();
+    let mut register_file_location = "";
 
-
-
+    if let Some(x) = matches.value_of("reg") {
+        register_file_location = x;
+    }
+    println!("{}",register_file_location);
     let info_log_filter = match matches.is_present("loginfo") {
         true => LevelFilter::Info,
         _ => LevelFilter::Off,
